@@ -7,10 +7,12 @@ export const globalErrorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("Error here", err);
-  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+  const statusCode = err?.statusCode || httpStatus.INTERNAL_SERVER_ERROR;
+
+  res.status(statusCode).json({
     success: false,
+    status: statusCode,
     message: err?.message || "Something went wrong",
-    err: err,
+    stack: process.env.NODE_ENV === "development" ? err?.stack : undefined,
   });
 };
