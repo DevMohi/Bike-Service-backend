@@ -2,71 +2,38 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import { customerService } from "./customer.service";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
+import { catchAsync } from "../../../shared/catchAsync";
 
-//basic boilerplate
-const catchAsync = (fn: RequestHandler) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await fn(req, res, next);
-    } catch (err) {
-      next(err);
-    }
-  };
-};
+const createCustomer = catchAsync(async (req, res) => {
+  const result = await customerService.createCustomerIntoDB(req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "Customer created successfully",
+    data: result,
+  });
+});
 
-const createCustomer = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const result = await customerService.createCustomerIntoDB(req.body);
-    sendResponse(res, {
-      statusCode: httpStatus.CREATED,
-      success: true,
-      message: "Customer created successfully",
-      data: result,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
+const getAllCustomers = catchAsync(async (req, res) => {
+  const result = await customerService.getAllCustomersFromDB();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Customers fetched successfully",
+    data: result,
+  });
+});
 
-const getAllCustomers = async (req: Request, res: Response) => {
-  try {
-    const result = await customerService.getAllCustomersFromDB();
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Customers fetched successfully",
-      data: result,
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: (err as Error)?.message || "Something went wrong",
-      error: err,
-    });
-  }
-};
-
-const getSingleCustomer = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getSingleCustomer = catchAsync(async (req, res) => {
   const { customerId } = req.params;
-  try {
-    const result = await customerService.getSingleCustomerFromDB(customerId);
-    res.status(200).json({
-      success: true,
-      message: "Customers fetched successfully",
-      data: result,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
+  const result = await customerService.getSingleCustomerFromDB(customerId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Customer fetched successfully with ID",
+    data: result,
+  });
+});
 
 export const customerController = {
   createCustomer,
