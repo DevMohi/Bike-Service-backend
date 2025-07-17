@@ -1,4 +1,4 @@
-import express, { NextFunction } from "express";
+import express from "express";
 import { customerController } from "./customer.controller";
 import { customerValidationSchemas } from "./customer.validations";
 import { validateRequest } from "../../middlewares/validateRequest";

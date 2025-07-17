@@ -1,4 +1,3 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
 import { customerService } from "./customer.service";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
