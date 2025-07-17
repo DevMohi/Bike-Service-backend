@@ -31,8 +31,26 @@ const getSingleCustomerFromDB = async (id: string) => {
   return result;
 };
 
+// Partial<ICustomer> allows updating only some fields of the ICustomer object by making all its properties optional
+const updateCustomerIntoDB = async (id: string, data: Partial<ICustomer>) => {
+  //jodi id na thake send an error
+  await prisma.customer.findUniqueOrThrow({
+    where: {
+      customerId: id,
+    },
+  });
+  const result = await prisma.customer.update({
+    where: {
+      customerId: id,
+    },
+    data,
+  });
+  return result;
+};
+
 export const customerService = {
   createCustomerIntoDB,
   getAllCustomersFromDB,
   getSingleCustomerFromDB,
+  updateCustomerIntoDB,
 };

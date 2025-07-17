@@ -35,8 +35,23 @@ const getSingleCustomer = catchAsync(async (req, res) => {
   });
 });
 
+const updateCustomer = catchAsync(async (req, res) => {
+  const { customerId } = req.params;
+  const result = await customerService.updateCustomerIntoDB(
+    customerId,
+    req.body
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Customer Updated Successfully",
+    data: result,
+  });
+});
+
 export const customerController = {
   createCustomer,
   getAllCustomers,
   getSingleCustomer,
+  updateCustomer,
 };
