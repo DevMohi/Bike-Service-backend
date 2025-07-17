@@ -1,4 +1,4 @@
-import express, { Application, NextFunction, Request, Response } from "express";
+import express, { Application, NextFunction, Request, response, Response } from "express";
 import cors from "cors";
 import { customerRouter } from "./app/modules/customer/customer.routes";
 import httpStatus from "http-status";
@@ -33,5 +33,11 @@ app.use("/api/customers", customerRouter);
 
 //global Error handler must use after this
 app.use(globalErrorHandler);
+
+//Not found middleware 
+app.use(req: Request , res : Response , next : NextFunction) => {
+  
+})
+
 
 export default app;
