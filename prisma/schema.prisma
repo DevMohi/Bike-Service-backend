@@ -8,16 +8,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+// model User { 
+//   id String @id @default(uuid())
+//   email String @unique
+//   password String 
+//   role UserRole
+//   needsPasswordChange Boolean @default(true)
+//   status UserStatus @default(ACTIVE)
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@map("users")
+// }
+
+// enum UserRole {
+//   ADMIN
+//   CUSTOMER
+// }
+
+
 model Customer {
   customerId String @id @default(uuid())
   name String 
   email String @unique
   phone String 
   createdAt DateTime @default(now())
-  // updatedAt  DateTime @updatedAt
+  updatedAt DateTime @updatedAt
 
   bikes Bike[] // One to many relation : a customer can have multiple Bikes
-
   @@map("customers")
 }
 
@@ -27,9 +46,9 @@ model Bike {
   model String 
   year Int 
   customerId String 
-
   createdAt DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
   customer Customer @relation(fields: [customerId] , references: [customerId])
   services ServiceRecord[] //One-to-many : A bike can have many service records
 
@@ -55,3 +74,7 @@ enum ServiceStatus {
   DONE
 }
 
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+}
