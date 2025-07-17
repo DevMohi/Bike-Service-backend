@@ -12,5 +12,6 @@ router.put(
   validateRequest(customerValidationSchemas.update),
   customerController.updateCustomer
 );
+router.delete("/:customerId", customerController.deleteCustomer);
 
 export const customerRouter = router;

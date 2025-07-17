@@ -1,11 +1,13 @@
 import z from "zod";
 
 const create = z.object({
-  body: z.object({
-    name: z.string(),
-    email: z.string(),
-    phone: z.string(),
-  }),
+  body: z
+    .object({
+      name: z.string(),
+      email: z.string(),
+      phone: z.string(),
+    })
+    .strict(),
 });
 
 const update = z.object({
