@@ -1,9 +1,24 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { customerService } from "./customer.service";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 
-const createCustomer = async (req: Request, res: Response) => {
+//basic boilerplate
+const catchAsync = (fn: RequestHandler) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await fn(req, res, next);
+    } catch (err) {
+      next(err);
+    }
+  };
+};
+
+const createCustomer = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const result = await customerService.createCustomerIntoDB(req.body);
     sendResponse(res, {
@@ -13,11 +28,7 @@ const createCustomer = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: (err as Error)?.message || "Something went wrong",
-      error: err,
-    });
+    next(err);
   }
 };
 
@@ -39,7 +50,11 @@ const getAllCustomers = async (req: Request, res: Response) => {
   }
 };
 
-const getSingleCustomer = async (req: Request, res: Response) => {
+const getSingleCustomer = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { customerId } = req.params;
   try {
     const result = await customerService.getSingleCustomerFromDB(customerId);
@@ -49,11 +64,7 @@ const getSingleCustomer = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: (err as Error)?.message || "Something went wrong",
-      error: err,
-    });
+    next(err);
   }
 };
 
